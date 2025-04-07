@@ -15,6 +15,7 @@ public class WeatherForecastController(ILogger<WeatherForecastController> logger
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {
+        logger.LogInformation($"Received GET request at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Timestamp = DateTime.Now.AddDays(index),
@@ -27,7 +28,10 @@ public class WeatherForecastController(ILogger<WeatherForecastController> logger
     [HttpPost]
     public ActionResult<WeatherForecast> Post([FromBody] WeatherForecast newForecast)
     {
-        logger.LogInformation($"Forecast received {newForecast.Timestamp} {newForecast.TemperatureC}");
+        logger.LogInformation(@$"Forecast received at {DateTime.Now:yyyy-MM-dd HH:mm:ss}. 
+    TimeStamp: {newForecast.Timestamp}, 
+    Temp: {newForecast.TemperatureC}, 
+    Summary: {newForecast.Summary}");
 
         return CreatedAtAction(nameof(Post), newForecast);
     }

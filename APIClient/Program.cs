@@ -9,15 +9,22 @@ namespace APIClient
 {
     class Program
     {
-        private const string RequestUri = "http://localhost:5107/weatherforecast";
+        
 
         static async Task Main(string[] args)
         {
+            string requestUriStr = "http://localhost:5107/weatherforecast";
+            Uri? uriResult = null;
+            if (args.Length > 0)
+            {
+                requestUriStr = args[0];
+                var res = Uri.TryCreate(requestUriStr, UriKind.Absolute, out uriResult);
+            }
             Console.WriteLine("When ready press <ENTER>");
             Console.ReadLine();
             var client = new HttpClient();
 
-            var result = await client.GetAsync(RequestUri);
+            var result = await client.GetAsync(uriResult);
 
 
             var newForeCast = new WeatherForecast
@@ -29,7 +36,7 @@ namespace APIClient
 
             var request = JsonSerializer.Serialize(newForeCast);
 
-            var response = await client.PostAsync(RequestUri,
+            var response = await client.PostAsync(requestUriStr,
                 new StringContent(request, Encoding.UTF8, "application/json"));
 
             Console.WriteLine(response);
